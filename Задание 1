@@ -1,0 +1,25 @@
+1.Создайте функцию, которая принимает кол-во сек и далее переводит их в кол-во дней, часов, минут, секунд.
+Пример: 123456 ->'1 days 10 hours 17 minutes 36 seconds '
+
+DROP FUNCTION IF EXISTS seconds_to_time;
+DELIMITER //
+CREATE FUNCTION seconds_to_time (seconds int)
+RETURNS varchar(250)
+DETERMINISTIC
+BEGIN
+	DECLARE result varchar(250);
+    DECLARE days_value int DEFAULT 0;
+    DECLARE hours_value int DEFAULT 0;
+    DECLARE minutes_value int DEFAULT 0;
+    set days_value = if(seconds > 86400, FLOOR(seconds / 86400), 0);
+    set seconds = seconds % 86400;
+    set hours_value = if(seconds > 3600, FLOOR(seconds / 3600), 0);
+    set seconds = seconds % 3600;
+    set minutes_value = if(seconds > 60, FLOOR(seconds / 60), 0);
+    set seconds = seconds % 60;
+    SET result = CONCAT(days_value, ' days ', hours_value, ' hours ', minutes_value, ' minutes ', seconds, ' seconds');
+	RETURN result;
+END;
+DELIMITER ;
+
+SELECT seconds_to_time(658936);
