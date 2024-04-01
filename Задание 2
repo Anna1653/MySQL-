@@ -1,0 +1,20 @@
+2.Cоздайте процедуру, которая выведет только числа, делящиеся на 15 или 33 в промежутке от 1 до 1000.
+Пример: 15,30,33,45...
+
+/*SET GLOBAL log_bin_trust_function_creators = 1;*/
+DROP PROCEDURE IF EXISTS numbers;
+DELIMITER //
+CREATE PROCEDURE numbers (out result varchar(10000))
+BEGIN
+	DECLARE i int DEFAULT 1000;
+    DECLARE n int DEFAULT 1;
+    set result = '';
+	while n <= i do
+        set result = concat(result, if(n % 15 = 0 or n % 33 = 0, if(length(result) = 0, n, concat(',', n)), ''));
+        set n = n + 1;
+    end while;
+END //
+DELIMITER ;
+
+call numbers(@result);
+select @result;
